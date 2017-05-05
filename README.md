@@ -8,4 +8,5 @@ Crawl wiki pages and extract articles:
 - thread_?.txt are the sample results
 
 To run: (Need python version 3.6.1 )
+
 % python3 WikiCrawler.py
