@@ -1,2 +1,3 @@
 # Multi-thread-Web-Crawler
-A web crawler with multi-threading
+
+Crawl wiki pages and extract articles
