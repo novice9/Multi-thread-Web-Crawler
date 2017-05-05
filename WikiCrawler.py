@@ -60,6 +60,9 @@ def wiki_crawler(locker, url_queue, url_visit, counter, filename, thread_id):
         # add delay between HTTP request
         time.sleep(2)
 
+        
+ 
+
 if __name__ == '__main__':
     locker = threading.Lock()
     
