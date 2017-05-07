@@ -20,45 +20,45 @@ def wiki_crawler(locker, url_queue, url_visit, counter, filename, thread_id):
             timeout -= 1
             if timeout == 0:
                 break
-        
-        # wait for locker
-        locker.acquire()
-        this_url = url_queue[0]
-        url_queue.popleft()
-        print(thread_id, ': Get a url from queue to work on')
-        locker.release()
+        else:
+            # wait for locker
+            locker.acquire()
+            this_url = url_queue[0]
+            url_queue.popleft()
+            print(thread_id, ': Get a url from queue to work on')
+            locker.release()
     
-        if this_url in url_visit:
-            continue
-    
-        locker.acquire()
-        url_visit.add(this_url)
-        print(thread_id, ': Update pool with visited URL')
-        locker.release()
-    
-        response = OpenURL.open_url(this_url)
-        # URL is invalid or encounter protocal error
-        if response == None:
-            continue
-    
-        # URL is redirect to other URL
-        if response.status in ['301', '302'] and response.geturl() in url_visit:
-            continue
-    
-        new_urls = ParseHTML.parse_html(response.read(), filename, format(index, '05d'))
-        index += 1
-    
-        locker.acquire()
-        for url in new_urls:
-            if url in url_visit:
+            if this_url in url_visit:
                 continue
-            url_queue.append(url)
-        print(thread_id, ': Inject all URLs into queue')
-        print('Totally', len(url_queue), 'URLs are in queue\n')
-        locker.release()
+    
+            locker.acquire()
+            url_visit.add(this_url)
+            print(thread_id, ': Update pool with visited URL')
+            locker.release()
+    
+            response = OpenURL.open_url(this_url)
+            # URL is invalid or encounter protocal error
+            if response == None:
+                continue
+    
+            # URL is redirect to other URL
+            if response.status in ['301', '302'] and response.geturl() in url_visit:
+                continue
+    
+            new_urls = ParseHTML.parse_html(response.read(), filename, format(index, '05d'))
+            index += 1
+    
+            locker.acquire()
+            for url in new_urls:
+                if url in url_visit:
+                    continue
+                url_queue.append(url)
+            print(thread_id, ': Inject all URLs into queue')
+            print('Totally', len(url_queue), 'URLs are in queue\n')
+            locker.release()
         
-        # add delay between HTTP request
-        time.sleep(2)
+            # add delay between HTTP request
+            time.sleep(2)
 
         
  
