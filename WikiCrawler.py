@@ -79,7 +79,6 @@ if __name__ == '__main__':
     ready = True
     
     url_queue = collections.deque(['https://en.wikipedia.org/wiki/Main_Page'])
-    url_queue.append('https://en.wikipedia.org')
     url_visit = set()
     
     worker1 = threading.Thread(target=wiki_crawler, name='thread-1', args=(cv, url_queue, url_visit, 100, 'thread-1.txt', 'thread-1'))
